@@ -448,8 +448,10 @@ def get_args():
         '-i', '--ignore', help='Comma-separated list of Pokémon names to ignore')
     group.add_argument(
         '-o', '--only', help='Comma-separated list of Pokémon names to search')
-    group.add_argument(
-        '-h', '--highlight', help='Comma-separated list of Pokémon names to highlight')
+    parser.add_argument(
+        "-hl",
+        "--highlight",
+        help="Comma-separated list of Pokémon names to highlight")
     parser.add_argument(
         "-ar",
         "--auto_refresh",
@@ -697,11 +699,6 @@ transform_from_wgs_to_gcj(Location(Fort.Latitude, Fort.Longitude))
             if pokename.lower() not in only:
                 continue
 
-        if args.highlight:
-            if pokename.lower() in highlight:
-                print "[+] Got %s at %f, %f" % (
-                    pokemon['name'].encode('utf-8'), pokemon['lat'], pokemon['lng'])
-
         disappear_timestamp = time.time() + poke.TimeTillHiddenMs \
             / 1000
 
@@ -709,6 +706,11 @@ transform_from_wgs_to_gcj(Location(Fort.Latitude, Fort.Longitude))
             (poke.Latitude, poke.Longitude) = \
                 transform_from_wgs_to_gcj(Location(poke.Latitude,
                     poke.Longitude))
+
+        if args.highlight:
+            if pokename.lower() in highlight:
+                print "[+] Got %s at %f, %f" % (
+                    pokename, poke.Latitude, poke.Longitude)
 
         pokemons[poke.SpawnPointId] = {
             "lat": poke.Latitude,
